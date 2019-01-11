@@ -10,8 +10,8 @@ admin.initializeApp();
 
 exports.deleteOldUser = functions.database.ref('/users/').onWrite((change) => {
   const parentRef = change.after.ref.parent; // reference to the parent
-
   
+  if (snapshot.childElementCount > 10) {
   const olduserQuery=parentRef.orderByChild('age').limitToLast(1);
   
   return olduserQuery.once('value').then((snapshot) => {
@@ -23,4 +23,6 @@ exports.deleteOldUser = functions.database.ref('/users/').onWrite((change) => {
     
     return parentRef.update(updates);
   });
+  }
+  return null;
 });
